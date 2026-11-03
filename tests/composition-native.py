@@ -97,6 +97,12 @@ with tempfile.TemporaryDirectory(prefix="purifier-native-composition-") as tempo
                        cwd=downstream, env=plain, check=True)
         print('MILL NATIVE AND PURE '+case.upper()+' ROUNDTRIP PASSED', flush=True)
 
+    # tests/default.nix has the polyglot checks only on the systems whose
+    # polyglot lock holds JVM archives, the Linux ones.
+    if not json.loads(subprocess.check_output(['nix', 'eval', '--json', 'path:' + snapshot + '#checks.' + system,
+            '--apply', 'checks: checks ? polyglot-hello-package'], text=True)):
+        print('skipping the polyglot round trip: there is no polyglot-hello-package check on ' + system, flush=True)
+        raise SystemExit(0)
     reference = 'path:' + snapshot + '#checks.' + system + '.polyglot-hello-package.projections.maven'
     repository = Path(subprocess.check_output(['nix', 'build', reference, '--print-out-paths',
         '--out-link', str(temporary / 'polyglot-repository')], text=True).strip().splitlines()[-1])
