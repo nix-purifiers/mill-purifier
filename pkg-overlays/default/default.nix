@@ -2,7 +2,7 @@
 #
 # The default package overlay. It adds one attribute to the package set:
 # the scope `pkgs.mill-purifier`, made with lib.makeScope. The scope holds
-# the builder `buildMillProject` (nix/lib/build-mill-project.nix) beside the
+# the builder `buildMillProject` (pkgs/build-mill-project/default.nix) beside the
 # mill-purifier command (`cli`), so a package written for callPackage takes
 # the scope by name, `{ mill-purifier }:`, and uses
 # `mill-purifier.buildMillProject`. `mill-purifier.overrideScope` replaces
@@ -19,7 +19,7 @@
 {
   overlay = closure-lib.caisson.nixpkgs.mkPackagesOverlay (callPackage: {
     cli = callPackage ../../pkgs/cli { purifierSource = closure-inputs.purifier; };
-    buildMillProject = callPackage ../../nix/lib/build-mill-project.nix {
+    buildMillProject = callPackage ../../pkgs/build-mill-project/default.nix {
       purifier = closure-lib.purifier;
     };
   }) "mill-purifier";

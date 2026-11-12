@@ -26,7 +26,7 @@ if ! grep -q "$kernel/2.10.0/" mill-purifier.lock.json || grep -q "$kernel/2.9.0
   echo "conformance-update: the update did not move cats-kernel from 2.9.0 to 2.10.0" >&2
   exit 1
 fi
-problems=$(nix-instantiate --eval --strict --expr "(import $repo/nix/lib/read-lock.nix { src = $work; }).problems")
+problems=$(nix-instantiate --eval --strict --expr "(import $repo/lib-overlays/default/read-lock.nix { src = $work; }).problems")
 if [ "$problems" != "[ ]" ]; then
   echo "conformance-update: readLock reports $problems" >&2
   exit 1

@@ -229,7 +229,7 @@ in
   # releases and 1.1.0-RC1 have none, and `release` says so for them.
   publisher-available =
     let
-      available = import ../nix/lib/publisher-available.nix { inherit lib; };
+      available = import ../pkgs/build-mill-project/publisher-available.nix { inherit lib; };
       without = [
         "0.12.14"
         "1.0.0"
@@ -253,8 +253,9 @@ in
   # The Nix side computes the definition hash the command wrote.
   definition-hash =
     assert
-      (import ../nix/lib/definition-hash.nix ./fixtures/simple).hash == simpleLock.definitionHash
-      || throw "definition-hash: nix/lib/definition-hash.nix disagrees with mill_purifier.definition_hash";
+      (import ../lib-overlays/default/definition-hash.nix ./fixtures/simple).hash
+      == simpleLock.definitionHash
+      || throw "definition-hash: lib-overlays/default/definition-hash.nix disagrees with mill_purifier.definition_hash";
     pkgs.runCommand "definition-hash" { } "touch $out";
 
   # The conformance checks of the purifier contract.
