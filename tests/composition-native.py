@@ -53,7 +53,7 @@ with tempfile.TemporaryDirectory(prefix="purifier-native-composition-") as tempo
         bootstrap = f'/com/lihaoyi/{provided_module}_3/4.4.3/'
         assert any(bootstrap in entry['path'] for entry in locked['artifacts'])
         run(cli,'prefetch')
-        run(cli,'mill','core.test')
+        run(cli,'mill','--no-daemon','core.test')
         expression = """let
           flake = builtins.getFlake (builtins.getEnv "MILL_COMPOSITION_SOURCE");
           project = builtins.getEnv "MILL_COMPOSITION_PROJECT";
