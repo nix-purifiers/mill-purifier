@@ -23,7 +23,7 @@ assert
   || throw "mill-purifier: the command needs purifierSource, the nix-purifiers/purifier source; take the package from this flake's overlay";
 stdenvNoCC.mkDerivation {
   pname = "mill-purifier";
-  version = lib.removeSuffix "\n" (builtins.readFile ../../version.txt);
+  version = import ../version.nix;
 
   src = lib.fileset.toSource {
     root = ./.;
