@@ -3,7 +3,7 @@
 # The `mill-purifier` library namespace:
 #
 #   readLock  the lockfile of a Mill build in the shape every purifier reads
-#             its lockfiles into (nix/lib/read-lock.nix), for tools that read
+#             its lockfiles into (lib-overlays/default/read-lock.nix), for tools that read
 #             every purifier, such as an SBOM generator
 #
 # It imports the purifier library (`lib.purifier`), whose fetchers, tree,
@@ -17,7 +17,7 @@
 
   overlay = final: prev: {
     mill-purifier = (prev.mill-purifier or { }) // {
-      readLock = import ../../nix/lib/read-lock.nix;
+      readLock = import ./read-lock.nix;
     };
   };
 

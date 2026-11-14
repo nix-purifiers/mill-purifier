@@ -18,7 +18,7 @@
 let
   pkgs = import nixpkgs { };
   purifier = import purifierSource { inherit (pkgs) lib; };
-  buildMillProject = pkgs.callPackage ./build-mill-project.nix { inherit purifier; };
+  buildMillProject = pkgs.callPackage ../../build-mill-project { inherit purifier; };
 in
 buildMillProject {
   src = /. + src;

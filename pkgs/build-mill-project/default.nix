@@ -70,7 +70,7 @@
   lockFile ? src + "/mill-purifier.lock.json",
   # The JDK that runs Mill's launcher, and Mill's daemon when the build sets
   # `mill-jvm-version: system`. The default is the JDK of the lock run
-  # (nix/lib/jdk.nix).
+  # (pkgs/build-mill-project/jdk.nix).
   jdk ? null,
   # The git commit the source is of, for a build that computes its version
   # from git (Mill's VcsVersion): { rev, revCount, tag, commitsSinceTag }.
@@ -89,7 +89,9 @@
 let
   # The lock in memory (read-lock.nix), which checkLock of the purifier
   # library stops at with its problems.
-  lock = purifier.checkLock (import ./read-lock.nix { inherit src lockFile allowStaleLock; });
+  lock = purifier.checkLock (
+    import ../../lib-overlays/default/read-lock.nix { inherit src lockFile allowStaleLock; }
+  );
   system = stdenvNoCC.hostPlatform.system;
 
   # Build outputs and editor state never take part in a build.

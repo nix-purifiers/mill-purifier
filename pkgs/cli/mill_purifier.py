@@ -148,7 +148,7 @@ def definition_files(root):
 def definition_hash(root):
     """The hash of the build definition: the SHA-256 of the compact JSON
     list of [path, SHA-256 of the file] for each definition file, in
-    hexadecimal. nix/lib/definition-hash.nix computes the same value, so a
+    hexadecimal. lib-overlays/default/definition-hash.nix computes the same value, so a
     Nix build can tell a stale lockfile from a current one."""
     files = [[rel, hashlib.sha256((root / rel).read_bytes()).hexdigest()] for rel in definition_files(root)]
     listing = json.dumps(files, separators=(",", ":"), ensure_ascii=False)
@@ -171,7 +171,7 @@ def launcher_url(version):
 
 def launcher_cache_path(root):
     """The place in the coursier cache of the launcher of the Mill version
-    the build pins, where the lock run downloaded it (nix/lib/mill-version.nix
+    the build pins, where the lock run downloaded it (pkgs/build-mill-project/mill-version.nix
     derives the same)."""
     version = mill_config(root, "mill-version")
     if not version:
@@ -289,7 +289,7 @@ MIRRORS = {MAVEN_CENTRAL: [MAVEN_CENTRAL_MIRROR]}
 def lock_entries(cache, paths):
     """The lock entries of `paths` in `cache`, as the lockfile records them:
     { path, hash }. A URL follows from its cache path, and the mirrors of
-    Maven Central from the URL, so nix/lib/read-lock.nix derives both, and the
+    Maven Central from the URL, so lib-overlays/default/read-lock.nix derives both, and the
     lockfile holds only what the lock run observed."""
     return [{"path": e["path"], "hash": e["hash"]} for e in coursier_cache.entries(cache, paths, mirrors=MIRRORS)]
 
@@ -546,7 +546,7 @@ DEFAULT_TESTS = "__.testForked"
 def content_hash(lock_data):
     """The hash of a lockfile's content: the SHA-256 of the lockfile without
     `contentHash`, as compact JSON with sorted keys, which is what Nix's
-    builtins.toJSON writes, so nix/lib/read-lock.nix computes the same value."""
+    builtins.toJSON writes, so lib-overlays/default/read-lock.nix computes the same value."""
     rest = {k: v for k, v in lock_data.items() if k != "contentHash"}
     text = json.dumps(rest, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
     return "sha256:" + hashlib.sha256(text.encode()).hexdigest()
@@ -561,7 +561,7 @@ def mill_version_key(version):
 
 FIRST_MILL_1 = ((1, 0, 0), 0)
 # Mill 1.1.0 is the first release with mill.javalib.MavenPublishModule. The
-# same decision is in nix/lib/publisher-available.nix.
+# same decision is in pkgs/build-mill-project/publisher-available.nix.
 MIN_PUBLISHER_MILL_VERSION = ((1, 1, 0), 1)
 
 
@@ -765,7 +765,7 @@ def lock(root, lock_file, tests=None, updated=None, input_refs=None):
 
 def nix_build(root, lock_file, state, attribute):
     """Builds an attribute of buildMillProject for the build at `root` (see
-    nix/lib/cli.nix) and returns its store path. The result link under
+    pkgs/cli/nix/cli.nix) and returns its store path. The result link under
     `state` is the GC root that keeps it."""
     lib = os.environ.get("MILL_PURIFIER_LIB")
     nixpkgs = os.environ.get("MILL_PURIFIER_NIXPKGS")

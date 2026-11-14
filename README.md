@@ -186,7 +186,7 @@ scope shares.
 ### What the builder takes and returns
 
 `buildMillProject` takes `src` and these arguments, which
-`nix/lib/build-mill-project.nix` documents:
+`pkgs/build-mill-project/default.nix` documents:
 
 - `fetchers`: the fetchers of the purifier library, such as a `fetchurl`
   that sends credentials or uses a company mirror. The default is the
@@ -196,7 +196,7 @@ scope shares.
   repository of the project. A packaging flake for a project whose author
   keeps no lockfile passes its own here, and it replaces any copy in `src`.
 - `jdk`: the JDK that runs Mill's launcher. The default is the headless
-  OpenJDK 21 that `nix/lib/jdk.nix` names, which the `mill-purifier`
+  OpenJDK 21 that `pkgs/build-mill-project/jdk.nix` names, which the `mill-purifier`
   command also uses.
 - `git`: the commit the source is of, for a version from git (see
   [Versions from git](#versions-from-git)).
